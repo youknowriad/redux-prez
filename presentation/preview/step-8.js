@@ -1,0 +1,152 @@
+import React from "react"
+import { render } from "react-dom"
+import { createStore, combineReducers } from "redux"
+import { connect, Provider } from "react-redux"
+
+const initialState = {
+  todos: [
+    { id: 1, checked: false, text: "Prepare the slides" }
+  ],
+  filterValue: "ALL"
+}
+
+const todos = (state = {}, action) => {
+  switch (action.type) {
+    case "add-todo":
+      return [ ...state, action.payload ]
+    case "toggle-todo":
+      const todoIndex = state.findIndex(todo => todo.id === action.payload)
+      const todo = state[todoIndex]
+      return [
+        ...state.slice(0, todoIndex),
+        { ...todo, checked: !todo.checked },
+        ...state.slice(todoIndex + 1)
+      ]
+    default:
+      return state
+  }
+}
+
+const filterValue = (state = "ALL", action) => {
+  if (action.type === "filter") {
+    return action.payload
+  }
+
+  return state
+}
+
+const reducer = combineReducers({ todos, filterValue })
+
+const store = createStore(reducer, initialState)
+
+const TodoList = ({ todos, toggleTodo }) => (
+  <div>
+    {todos.map(todo =>
+        <li key={todo.id}>
+          <input type="checkbox" checked={todo.checked} onChange={() => toggleTodo(todo.id)} />
+          {todo.text}
+        </li>
+    )}
+  </div>
+)
+
+const mapStateToProps = state => {
+  let visibleTodos
+  const filterValue = state.filterValue
+  if (filterValue !== "ALL") {
+    visibleTodos = state.todos
+      .filter(todo => todo.checked === !!filterValue)
+  } else {
+    visibleTodos = state.todos
+  }
+
+  return { todos: visibleTodos }
+}
+
+const mapDispatchToProps = dispatch => ({
+  toggleTodo: id => dispatch({
+    type: "toggle-todo",
+    payload: id
+  })
+})
+
+const TodoListContainer =
+  connect(mapStateToProps, mapDispatchToProps)(TodoList)
+
+const FilterLinks = ({ filter }) => {
+  const filters = [
+    { value: "ALL", caption: "All" },
+    { value: 1, caption: "Checked" },
+    { value: 0, caption: "Unchecked" }
+  ]
+
+  return (
+    <div>
+      <span>Filter :</span>
+      {filters.map(f =>
+        <a key={f.value} onClick={() => filter(f.value)}>
+          {f.caption}
+        </a>
+      )}
+    </div>
+  )
+}
+
+const FilterLinksContainer = connect(
+  () => ({}),
+  dispatch => ({
+    filter: dispatch({
+      type: "filter",
+      payload: filterValue
+    })
+  })
+)(FilterLinks)
+
+let id = 1
+class NewTodoForm extends React.Component {
+
+  addTodo() {
+    id++
+    const text = this.refs.newTodo.value
+    this.props.addTodo(id, text)
+  }
+
+  render() {
+    return (
+      <div>
+        Add Todo <input ref="newTodo" type="text" />
+        <input type="submit" onClick={() => this.addTodo()} />
+      </div>
+    )
+  }
+}
+
+const NewTodoFormContainer = connect(
+  () => ({}),
+  dispatch => ({
+    addTodo: (id, text) => dispatch({
+      type: "add-todo",
+      payload: { id, checked: false, text }
+    })
+  })
+)(NewTodoForm)
+
+const App = () => (
+  <Provider store={store}>
+    <TodoListContainer />
+    <NewTodoFormContainer />
+    <FilterLinksContainer />
+  </Provider>
+)
+
+export default element => {
+  const refresh = () => {
+    render(<App/>, element)
+  }
+
+  store.subscribe(() => {
+    refresh()
+  })
+
+  refresh()
+}

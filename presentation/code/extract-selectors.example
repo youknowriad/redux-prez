@@ -1,0 +1,24 @@
+const mapStateToProps = state => {
+  const filterValue = state.filterValue
+  const visibleTodos = state.todos
+    .filter(todo => todo.checked === !!filterValue)
+
+  return { todos: visibleTodos }
+}
+
+const getVisibleTodos = state => {
+  const filterValue = state.filterValue
+  return visibleTodos = state.todos
+    .filter(todo => todo.checked === !!filterValue)
+}
+
+const mapStateToProps = state => ({
+  todos: getVisibleTodos(state)
+})
+
+import { createSelector } from "reselect"
+const getVisibleTodos = createSelector(
+  state => state.filterValue,
+  state => state.todos,
+  (filterValue, todos) => todos.filter(todo => todo.checked === !!filterValue)
+)

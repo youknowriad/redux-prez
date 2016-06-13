@@ -1,0 +1,15 @@
+---
+"extends":
+  - "eslint-config-defaults/configurations/walmart/es6-react"
+
+"rules":
+  "indent": [2, 2, {"SwitchCase": 1}]
+  "max-len": 0
+  "semi": [2, "never"]
+  "arrow-parens": 0
+  "no-use-before-define": 0
+  "no-shadow": 0
+
+"env":
+  "browser": true,
+  "node": true

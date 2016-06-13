@@ -1,0 +1,45 @@
+// A variable holding the state
+let state = [
+  { checked: false, text: "Prepare the slides" }
+]
+
+const reducer = (state, action) => {
+  if (action.type === "add-todo") {
+    return [ ...state, action.payload ]
+  }
+  return state
+}
+
+// The render function
+const render = state => {
+  const todosHtml = state.map(todo =>
+    `<li><input type="checkbox" ${todo.checked ? "checked" : ""} />${todo.text}</li>`
+  ).join("")
+
+  const todoInput = `
+    Add Todo <input id="newTodo" type="text" />
+    <input type="submit" />
+  `
+
+  return `<ul>${todosHtml}</ul> ${todoInput}`
+}
+
+// Dispatch a new action
+const dispatch = action => {
+  state = reducer(state, action)
+  refresh()
+}
+
+// Refresh
+const refresh = () =>
+  document.body.innerHTML = render(state)
+
+setTimeout(() => {
+  const action = {
+    type: "add-todo",
+    payload: { checked: false, text: "Repeat the prez" }
+  }
+  dispatch(action)
+}, 1000)
+
+refresh()

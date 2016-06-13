@@ -1,0 +1,27 @@
+function myFunc(a) { return b }
+const myFunc = (a) => { return b }
+const myFunc = (a) => b
+const myFunc = a => b
+
+
+const myFunc = a => console.log(a.toto)
+const myFunc = ({ toto }) => console.log(toto)
+
+
+const myObj =  { a: a, b: b }
+const myObj = { a, b }
+
+
+const array = [ 1, 2 ]
+const array2 = [ ...array, 3 ]
+console.log(array2) // [1, 2, 3]
+
+
+const myObj = { a: 1, b: 2, c: 3 }
+const myObj2 = { ...myObj, b: 4 }
+console.log(myObj2) // { a: 1, b: 4, c: 3 }
+
+
+const myFunc = (a = 1) => a
+console.log(myFunc(2)) //  2
+console.log(myFunc()) //  1

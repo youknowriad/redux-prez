@@ -1,0 +1,28 @@
+const store = createStore(
+  reducer,
+  applyMiddleware(
+    thunkMiddleware,
+    promiseMiddleware
+  )
+)
+
+const thunkActionCreator = () => {
+  return dispatch => {
+    dispatch({ type: "start-fetch" })
+    fetch("/todos")
+      .then(res => {
+        dispatch({
+          type: "fetch-success",
+          payload: res.json()
+        })
+      })
+  }
+}
+
+const promiseActionCreator = () => {
+  return fetch("/todos")
+    .then(res => ({
+      type: "fetch-success",
+      payload: res.json()
+    }))
+}

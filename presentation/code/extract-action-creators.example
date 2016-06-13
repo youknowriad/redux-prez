@@ -1,0 +1,19 @@
+const mapDispatchToProps = dispatch => ({
+  toggleTodo: id => dispatch({
+    type: "toggle-todo",
+    payload: id
+  })
+})
+
+const toggleTodo = id => ({
+  type: "toggle-todo",
+  payload: id
+})
+
+const mapDispatchToProps = dispatch => ({
+  toggleTodo: id => dispatch(toggleTodo(id))
+})
+
+import {bindActionCreators} from "redux"
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ toggleTodo }, dispatch)

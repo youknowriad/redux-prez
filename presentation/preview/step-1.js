@@ -1,0 +1,22 @@
+// A variable holding the state
+const state = [
+  { checked: false, text: "Prepare the slides" }
+]
+
+// The render function
+const render = state => {
+  const todosHtml = state.map(todo =>
+    `<li><input type="checkbox" ${todo.checked ? "checked" : ""} />${todo.text}</li>`
+  ).join("")
+
+  const todoInput = `
+    Add Todo <input id="newTodo" type="text" />
+    <input type="submit" />
+  `
+
+  return `<ul>${todosHtml}</ul> ${todoInput}`
+}
+
+export default element => {
+  element.innerHTML = render(state)
+}

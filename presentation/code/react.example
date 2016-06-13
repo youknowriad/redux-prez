@@ -1,0 +1,18 @@
+import React from "react"
+import { render } from "react-dom"
+
+const Person = ({ firstName }) => (
+  <div>{firstName}</div>
+)
+
+const PersonList = ({ persons }) => (
+  <div>
+    {persons.map(person =>
+      <Person firstName={person.firstName} />
+    )}
+  </div>
+)
+
+const persons = []
+render(<PersonList persons={persons} />,
+ document.getElementById("root"))
